@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-2.0" xmlns:nam="http://geronimo.apache.org/xml/ns/naming-1.2" xmlns:sec="http://geronimo.apache.org/xml/ns/security-2.0" xmlns:sys="http://geronimo.apache.org/xml/ns/deployment-1.2">
+  <sys:environment>
+    <sys:moduleId>
+      <sys:groupId>easyajax</sys:groupId>
+      <sys:artifactId>DWREasyAjax</sys:artifactId>
+      <sys:version>1.0</sys:version>
+      <sys:type>car</sys:type>
+    </sys:moduleId>
+    <sys:dependencies>
+      <sys:dependency>
+        <sys:groupId>console.dbpool</sys:groupId>
+        <sys:artifactId>EasyAjaxDBPool</sys:artifactId>
+        <sys:version>1.0</sys:version>
+        <sys:type>rar</sys:type>
+      </sys:dependency>
+    </sys:dependencies>
+  </sys:environment>
+  <context-root>/DWREasyAjax</context-root>
+  <nam:resource-ref>
+    <nam:ref-name>jdbc/CountryDataSource</nam:ref-name>
+    <nam:resource-link>EasyAjaxDBPool</nam:resource-link>
+  </nam:resource-ref>
+</web-app>

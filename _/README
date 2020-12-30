@@ -1,0 +1,32 @@
+This ZIP file includes source code for the samples.
+Sample code is included in WAR-files:
+
+DWREasyAjax_04.war
+DWREasyAjax_05.war
+DWREasyAjax_06.war
+DWRBookAuthoring.war
+DWRChatRoom.war
+
+Files DWREasyAjax_04(05,06).war include source code for the 
+chapters 4-6. Samples in chapter 7 are in two WAR
+file: DWRBookAuthoring.war and DWRChatRoom.war
+
+Samples could be used by installing WAR files to 
+application server using application server
+specific tools for installation.
+
+In order to use samples in Eclipse IDE, they should be imported to 
+Eclipse. 
+
+1. In Eclipse IDE select File -> Import.
+2. In the Import-wizard, select Web -> WAR file
+   and click Next.
+3. Select WAR file to import, for example DWREasyAjax_04.war.
+4. Leave other as default or change target runtime to your own runtime.
+5. Click Finish.
+6. Repeat for all WAR files.
+
+
+
+
+

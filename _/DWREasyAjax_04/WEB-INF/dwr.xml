@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"
+    "http://getahead.org/dwr/dwr20.dtd">
+
+<dwr>
+  <allow>
+    <create creator="new" javascript="HorizontalMenu">
+      <param name="class" value="samples.HorizontalMenu" />
+    </create>
+    <create creator="new" javascript="AppContent">
+      <param name="class" value="samples.AppContent" />
+      <include method="getContent" />
+      <include method="getLetters" />
+    </create>
+    <create creator="new" javascript="CountryDB">
+      <param name="class" value="samples.CountryDB" />
+      <include method="getCountries" />
+      <include method="saveCountryNotes" />
+      <include method="getCountryData" />
+    </create>
+       <create creator="new" javascript="LicenseDB">
+      <param name="class" value="samples.LicenseDB"/>
+      <include method="getLicensesStartingWith"/>
+      <include method="getLicenseContentUrl"/>
+    </create>      
+  </allow>
+</dwr>

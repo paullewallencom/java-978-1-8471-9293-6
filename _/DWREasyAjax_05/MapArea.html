@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type='text/javascript'
+  src='/DWREasyAjax/dwr/interface/MapScroller.js'></script>
+<script type='text/javascript' src='/DWREasyAjax/dwr/engine.js'></script>
+<script type='text/javascript' src='/DWREasyAjax/dwr/util.js'></script>
+<script type="text/javascript">
+
+var zoomLevel = 0;
+var visiblePositionIndex= 0;
+var mapPositionIndex= 0;
+
+var refGridX=0;
+var refGridY=0;
+
+function getRowIndex()
+{
+  var tempIndex=0;
+    if(zoomLevel==0)
+    {
+      if(mapPositionIndex>=10)
+      {
+        tempIndex=parseInt(mapPositionIndex.toString().substring(1));
+      }
+      else
+      {
+        tempIndex=mapPositionIndex;
+      }
+    }
+    else
+    {
+      if(mapPositionIndex>=100)
+      {
+        tempIndex=parseInt(mapPositionIndex.toString().substring(1));
+      }
+      else
+      {
+        tempIndex=mapPositionIndex;
+      }
+      while(tempIndex>16)
+      {
+        tempIndex-=20;
+      }
+      if(tempIndex<0)
+      {
+        tempIndex=16;
+      }
+    
+    }
+  return tempIndex;
+}
+
+function setZoomLevel(newZoomLevel)
+{
+  if(newZoomLevel==0)
+  {
+    oldMapPositionIndex=mapPositionIndex;
+    newRow=Math.round(Math.round(mapPositionIndex/17.0)/2.0)-1;
+    if(newRow>5)
+    {
+      newRow=5;
+    }
+    else
+    {
+      if(newRow>=1 && newRow<=5)
+      {
+        newRow--;
+      }
+    }
+    newColumn=Math.floor(getRowIndex()/2.0)-1;
+    if(newColumn>6)
+    {
+      newColumn=6;
+    }
+    mapPositionIndex=(newRow*10)+newColumn;
+    if(oldMapPositionIndex==208)
+    {
+      mapPositionIndex=43;
+    }
+    if(oldMapPositionIndex==214)
+    {
+      mapPositionIndex=46;
+    }
+    if(mapPositionIndex<0)
+    {
+      mapPositionIndex=0;
+    }
+  }
+  else
+  {
+    mapPositionIndex=(Math.floor(mapPositionIndex/10.0)*40)+40+(2*(getRowIndex()+1));
+  }
+  zoomLevel=newZoomLevel;
+  getMapImages(zoomLevel,mapPositionIndex);
+}
+
+function getMapImages(zoomLevel,mapPositionIndex)
+{
+  MapScroller.getMapImages(zoomLevel,mapPositionIndex, {
+    callback:function(images) {
+      setImages(images, zoomLevel);
+    }
+  });
+}
+
+function setRefGrid(event)
+{
+  refGridX=Math.floor(event.clientX/100.0);
+  refGridY=Math.floor(event.clientY/100.0);
+}
+
+function startScroll(event)
+{
+  setRefGrid(event);
+  document.addEventListener("mousemove", mouseMove,   true);
+  document.addEventListener("mouseup",   stopScroll, true);
+  document.addEventListener("mouseout",   stopScrollOnOut, true);
+  document.addEventListener("mouseover",   stopScrollOnOut, true);
+  event.preventDefault();
+}
+
+function stopScroll(event)
+{
+  document.removeEventListener("mousemove", mouseMove,   true);
+  document.removeEventListener("mouseup",   stopScroll, true);
+  document.removeEventListener("mouseout",   stopScrollOnOut, true);
+  document.removeEventListener("mouseover",   stopScrollOnOut, true);
+}
+
+function stopScrollOnOut(event)
+{
+  var src=event.target;
+  if(src.id=="scrollingMapArea")
+  {
+    stopScroll(event);
+  }
+}
+
+function mouseMove(event)
+{
+  x=event.clientX;
+  y=event.clientY;
+  newGridX=Math.floor(x/100.0);
+  newGridY=Math.floor(y/100.0);
+  deltaX=newGridX-refGridX;
+  deltaY=newGridY-refGridY;
+  if(deltaX==0 && deltaY==0)
+  {
+    return;
+  }
+  var update=false;
+  var tilesInRow=10;
+  if(zoomLevel==1)
+  {
+    tilesInRow=20;
+  }
+  tempIndex=getRowIndex();
+
+  if(deltaX>0)
+  {
+      if((tempIndex<6 && zoomLevel==0) || (tempIndex<16 && zoomLevel==1))
+      {
+        mapPositionIndex++;
+        update=true;
+      }
+  }
+  else
+  {
+    if(deltaX<0)
+    {
+      if(tempIndex>0)
+      {
+        if(mapPositionIndex-1>=0)
+        {
+          mapPositionIndex--;
+          update=true;
+         }
+      }
+      
+    }
+  }
+  
+  if(deltaY>0)
+  {
+      var tempYIndex=50;
+      if(zoomLevel==1)
+      {
+        tempYIndex=260;
+      }
+      if(mapPositionIndex<tempYIndex)
+      {
+        mapPositionIndex+=tilesInRow;
+        update=true;
+      }
+  }
+  else
+  {
+    if(deltaY<0)
+    {
+      if(mapPositionIndex>0 && mapPositionIndex>=tilesInRow)
+      {
+        mapPositionIndex-=tilesInRow;
+        if(mapPositionIndex<0)
+        {
+          mapPositionIndex=0;
+        }
+        update=true;
+      }
+    }
+  }
+
+  if(update)
+  {
+    setRefGrid(event);
+    getMapImages(zoomLevel,mapPositionIndex);
+  }
+}
+
+function setImages(images,zoomLevel)
+{
+  var mapArea=dwr.util.byId('scrollingMapArea');
+  mapArea.innerHTML="";
+  for(index in images)
+  {
+    var imageName=images[index];
+    var mapPart = document.createElement("img");
+    mapPart.setAttribute('border','1');
+    mapPart.setAttribute('src','mapimages/'+imageName);
+    mapArea.appendChild(mapPart);
+  }
+}
+</script>
+</head>
+<body onMouseDown="startScroll(event)">
+<div id="scrollingMapArea"></div>
+</body>
+
+<script type="text/javascript">
+getMapImages(zoomLevel,mapPositionIndex);
+</script>
+</html>

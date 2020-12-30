@@ -1,0 +1,23 @@
+<h3>Countries</h3>
+<p>Show countries starting with 
+<select id="letters" onchange="selectLetter(this);return false;"> </select><br/>
+Doubleclick "Notes"-cell to add notes to country.
+</p>
+<table border="1">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Long name</th>
+			<th>Code</th>
+      <th>Capital</th>
+			<th>Notes</th>
+		</tr>
+	</thead>
+	<tbody id="countryData">
+	</tbody>
+</table>
+
+<script type='text/javascript'>
+//TO BE EVALED
+AppContent.getLetters(addLetters);
+</script>
